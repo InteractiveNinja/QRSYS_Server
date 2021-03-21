@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "@interactiveninja/config-reader": "^2.1.1",
+        "env": "0.0.2",
         "ws": "^7.4.4"
     }
 }
