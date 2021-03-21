@@ -1,0 +1,30 @@
+{
+    "name": "qrsys_server",
+    "version": "1.0.0",
+    "description": "QRSYS Server ",
+    "main": "dist/app.js",
+    "scripts": {
+        "dev": "nodemon src/app.ts",
+        "start": "tsc && node ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/InteractiveNinja/QRSYS_Server.git"
+    },
+    "author": "InteractiveNinja",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/InteractiveNinja/QRSYS_Server/issues"
+    },
+    "homepage": "https://github.com/InteractiveNinja/QRSYS_Server#readme",
+    "devDependencies": {
+        "@types/ws": "^7.4.0",
+        "nodemon": "^2.0.7",
+        "ts-node": "^9.1.1",
+        "typescript": "^4.2.3"
+    },
+    "dependencies": {
+        "@interactiveninja/config-reader": "^2.1.1",
+        "ws": "^7.4.4"
+    }
+}
