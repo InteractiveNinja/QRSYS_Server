@@ -42,7 +42,7 @@ export class SocketServer {
         
         
         this.server.on('listening', () => {
-            console.log("Server läuft auf Port:", this.port)
+            console.log("Socket Server läuft auf Port:", this.port)
         })
     }
 
