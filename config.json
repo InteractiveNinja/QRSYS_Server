@@ -1,3 +1,4 @@
 [{
-    "port": 8080
+    "socketport": 8080,
+    "authport": 8081
 }]
