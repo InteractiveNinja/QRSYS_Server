@@ -11,20 +11,27 @@ export class AuthServer{
     }
 
     private run(){
-        const express = this.express;
+        const app = this.express;
 
-        express.use(js())
+        app.use(js())
 
-        express.get("/",(req,res) =>{
+        app.all('*', function (req, res, next) {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type');
+            next();
+        });
+
+        app.get("/",(req,res) =>{
             res.sendStatus(200)
         })
-        express.post("/login",(req,res) =>{
+        app.post("/login",(req,res) =>{
             checkLogin(req.body).then((e) => res.json({userid:e})).catch(() => res.sendStatus(403))
         })
 
 
 
-        express.listen(this.port,() =>{
+        app.listen(this.port,() =>{
             console.log("Auth Server läuft auf Port:",this.port)
         })
     }
