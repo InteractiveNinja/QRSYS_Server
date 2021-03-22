@@ -14,7 +14,7 @@ server.on('connection', (socket, req) => {
             let json = JSON.parse(socketData.toString())
             switch (json.type) {
                 case "register":
-                    registerSocket(json.value, socket, req.socket.remoteAddress).then(e => socket.send(JSON.stringify({ "type": "callback", "value": "200" }))).catch(e => socket.send(JSON.stringify({ "type": "callback", "value": "500" })))
+                    registerSocket(json.value, socket,json.hostname).then(e => socket.send(JSON.stringify({ "type": "callback", "value": "200" }))).catch(e => socket.send(JSON.stringify({ "type": "callback", "value": "500" })))
                     break;
                 case "send":
                     sendToSocket(json.userid,json.deviceid,json.message).then(e => socket.send(JSON.stringify({ "type": "callback", "value": "200" }))).catch(e => socket.send(JSON.stringify({ "type": "callback", "value": "500" })))
