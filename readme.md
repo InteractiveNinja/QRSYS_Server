@@ -15,3 +15,9 @@ Der Server unterstützt folgende OnMessage Typen
 * list
 `{type:"list",userid:"{userid}"}`
 
+
+### Running Ports
+
+Socket Port `8080`
+
+Auth Port ``8081`
