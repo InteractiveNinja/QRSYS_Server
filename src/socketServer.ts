@@ -18,32 +18,36 @@ export class SocketServer {
                     let json = JSON.parse(socketData.toString())
                     switch (json.type) {
                         case "register":
-                            registerSocket(json.value, socket, json.hostname).then(e => socket.send(JSON.stringify({ "type": "callback", "value": "200" }))).catch(e => socket.send(JSON.stringify({ "type": "callback", "value": "500" })))
+                            registerSocket(json.value, socket, json.hostname).then(e => socket.send(this.sendStatus("callback", "200"))).catch(e => socket.send(this.sendStatus("callback", "500")))
                             break;
                         case "send":
-                            sendToSocket(json.userid, json.deviceid, json.message).then(e => socket.send(JSON.stringify({ "type": "callback", "value": "200" }))).catch(e => socket.send(JSON.stringify({ "type": "callback", "value": "500" })))
+                            sendToSocket(json.userid, json.deviceid, json.message).then(e => socket.send(this.sendStatus("callback", "200"))).catch(e => socket.send(this.sendStatus("callback", "500")))
                             break;
                         case "list":
-                            listSockets(json.value).then(e => socket.send(JSON.stringify(e))).catch(e => socket.send(JSON.stringify({ "type": "callback", "value": "500" })))
+                            listSockets(json.value).then(e => socket.send(JSON.stringify(e))).catch(e => socket.send(this.sendStatus("callback", "500")))
                             break;
                         default:
-                            socket.send(JSON.stringify({ "type": "callback", "value": "500" }))
+                            socket.send(this.sendStatus("callback", "500"))
                             socket.close()
                             break;
                     }
                 } catch (error) {
-                    socket.send(JSON.stringify({ "type": "callback", "value": "500" }))
+                    socket.send(this.sendStatus("callback", "500"))
                     socket.close()
                 }
-        
+
             })
-        
+
         })
-        
-        
+
+
         this.server.on('listening', () => {
             console.log("Socket Server läuft auf Port:", this.port)
         })
+    }
+
+    private sendStatus = (type: string, value: string): string => {
+        return JSON.stringify({type,value})
     }
 
 }
