@@ -1,8 +1,10 @@
+import { DB } from './Database';
 import { AuthServer } from './authServer';
-import { config } from '@interactiveninja/config-reader'
+import { config as c } from '@interactiveninja/config-reader'
 import {SocketServer} from './socketServer'
 
-const c = config("config.json")
+const config = c("config.json")
 
-let socket = new SocketServer(c)
-let auth = new AuthServer(c)
+let database = new DB(config)
+let socket = new SocketServer(config)
+let auth = new AuthServer(config,database)

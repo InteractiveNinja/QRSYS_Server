@@ -1,16 +1,16 @@
-import { checkLogin } from './authManagment';
+import { DB } from './Database';
 import { ConfigManager } from '@interactiveninja/config-reader';
-import express,{json as js} from 'express';
-export class AuthServer{
-    private port : number
+import express, { json as js } from 'express';
+export class AuthServer {
+    private port: number
     private express;
-    constructor(config: ConfigManager){
+    constructor(config: ConfigManager,private db: DB) {
         this.port = config.get("authport")
         this.express = express()
         this.run()
     }
 
-    private run(){
+    private run() {
         const app = this.express;
 
         app.use(js())
@@ -22,17 +22,19 @@ export class AuthServer{
             next();
         });
 
-        app.get("/",(req,res) =>{
+        app.get("/", (req, res) => {
             res.sendStatus(200)
         })
-        app.post("/login",(req,res) =>{
-            checkLogin(req.body).then((e) => res.json({userid:e})).catch(() => res.sendStatus(403))
+        app.post("/login", (req, res) => {
+            this.db.checkLogin(req.body).then((e) => res.json({userid:e.userid,hash:e.hash})).catch(() => res.sendStatus(403))
         })
 
 
 
-        app.listen(this.port,() =>{
-            console.log("Auth Server läuft auf Port:",this.port)
+        app.listen(this.port, () => {
+            console.log("Auth Server läuft auf Port:", this.port)
         })
     }
+
+  
 }
