@@ -41,25 +41,30 @@ export class DB {
     }
     private checkForUser = (form: loginForm): Promise<db_schema> => {
         return new Promise((res, rej) => {
-            let [found] = databaseMock.filter((e) =>{
-                return (e.username == form.username && e.password == form.password)
+            let [found] = databaseMock.filter((e) => {
+                return ((e.username == form.username) && (e.password == form.password))
             })
-            if(found == undefined) rej()
-            res(this.setHash(found))
+            if (found == undefined) rej()
+            if (found.expires == undefined || found.expires < new Date()) {
+                res(this.setHash(found))
+
+            } else {
+                res(found)
+            }
         })
     }
     private checkHash = (form: loginForm): Promise<db_schema> => {
         return new Promise((res, rej) => {
-            let [found] = databaseMock.filter((e) =>{
+            let [found] = databaseMock.filter((e) => {
                 return (e.hash == form.hash)
             })
-            if(found == undefined || found.expires == undefined || found.expires<new Date()) rej()
+            if (found == undefined || found.expires == undefined || found.expires < new Date()) rej()
             res(found)
         })
     }
 
 
-    private setHash = (user: db_schema): db_schema =>{
+    private setHash = (user: db_schema): db_schema => {
 
         let index = databaseMock.indexOf(user);
 
