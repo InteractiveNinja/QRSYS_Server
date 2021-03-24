@@ -6,5 +6,5 @@ import {SocketServer} from './socketServer'
 const config = c("config.json")
 
 let database = new DB(config)
-let socket = new SocketServer(config)
+let socket = new SocketServer(config,database)
 let auth = new AuthServer(config,database)
