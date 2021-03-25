@@ -10,14 +10,14 @@ Der Server unterstützt folgende OnMessage Typen
 `{type:"register",value:"{userid}"}`
 
 * send
-`{type:"send",userid:"{userid}",deviceid:"{deviceid}",message:"{message}"}`
+`{type:"send",hash:"{hash}",userid:"{userid}",deviceid:"{deviceid}",message:"{message}"}`
 
 * list
-`{type:"list",userid:"{userid}"}`
+`{type:"list",hash:"{hash}",userid:"{userid}"}`
 
 
 ### Running Ports
 
 Socket Port `8080`
 
-Auth Port ``8081`
+Auth Port `8081`
