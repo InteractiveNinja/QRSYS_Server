@@ -18,27 +18,23 @@ export class SocketServer {
                 try {
                     let json = JSON.parse(socketData.toString())
                     let hash = json.hash
-                    if (hash == undefined) throw new Error("Kein Hash mitgegeben")
-                    this.db.checkHash(hash).then(() => {
-                        switch (json.type) {
-                            case "register":
-                                registerSocket(json.value, socket, json.hostname).then(e => socket.send(this.sendStatus("callback", "200"))).catch(e => socket.send(this.sendStatus("callback", "500")))
-                                break;
-                            case "send":
-                                sendToSocket(json.userid, json.deviceid, json.message).then(e => socket.send(this.sendStatus("callback", "200"))).catch(e => socket.send(this.sendStatus("callback", "500")))
-                                break;
-                            case "list":
-                                listSockets(json.value).then(e => socket.send(JSON.stringify(e))).catch(e => socket.send(this.sendStatus("callback", "500")))
-                                break;
-                            default:
-                                socket.send(this.sendStatus("callback", "500"))
-                                socket.close()
-                                break;
-                        }
-                    }).catch(() => {
-                        socket.send(this.sendStatus("callback", "500"))
-                        socket.close()
-                    })
+                    switch (json.type) {
+                        case "register":
+                            registerSocket(json.value, socket, json.hostname).then(() => socket.send(this.sendStatus("callback", "200"))).catch(() => socket.send(this.sendStatus("callback", "500")))
+                            break;
+                        case "send":
+
+                            if(!this.db.isValidHash(hash)) throw new Error("Hash ist nicht gültig")
+                            sendToSocket(json.userid, json.deviceid, json.message).then(() => socket.send(this.sendStatus("callback", "200"))).catch(() => socket.send(this.sendStatus("callback", "500")))
+                            break;
+                        case "list":
+                            if(!this.db.isValidHash(hash)) throw new Error("Hash ist nicht gültig")
+                            listSockets(json.value).then(e => socket.send(JSON.stringify(e))).catch(() => socket.send(this.sendStatus("callback", "500")))
+                            break;
+                        default:
+                            throw new Error("Es wurde keine Operation gewählt")
+                    }
+
 
                 } catch (error) {
                     socket.send(this.sendStatus("callback", "500"))

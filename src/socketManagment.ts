@@ -14,6 +14,8 @@ let openSockets: connectionEntrie[] = []
 let deviceID = 0
 export let registerSocket = (userid: number, socket: WebSocket, hostname: string): Promise<void> => {
     return new Promise((res, rej) => {
+        if(userid == undefined ||socket == undefined || hostname == undefined || hostname == "") rej()
+
         checkConnections()
         deviceID++;
         let connection: connectionEntrie = { id: deviceID, userid: userid,hostname:hostname, socket: socket };
@@ -27,7 +29,7 @@ export let registerSocket = (userid: number, socket: WebSocket, hostname: string
 export let listSockets = (userid: number): Promise<connectionList[]> => {
     return new Promise((res, rej) => {
 
-        
+        if(userid == undefined) rej()
 
         checkConnections()
 
@@ -48,6 +50,7 @@ export let listSockets = (userid: number): Promise<connectionList[]> => {
 
 export let sendToSocket = (userid: number, deviceid: number,message: string) : Promise<void> =>{
     return new Promise((res, rej) =>{
+        if(userid == undefined ||deviceid == undefined || message == undefined || message == "") rej()
         let destSocket = openSockets.filter(val =>{
             return (val.userid == userid && val.id == deviceid)
         })[0]

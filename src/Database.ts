@@ -53,14 +53,25 @@ export class DB {
             }
         })
     }
-    public checkHash = (form: loginForm): Promise<db_schema> => {
+    private checkHash = (form: loginForm): Promise<db_schema> => {
         return new Promise((res, rej) => {
             let [found] = databaseMock.filter((e) => {
                 return (e.hash == form.hash)
             })
+            console.log(found)
             if (found == undefined || found.expires == undefined || found.expires < new Date()) rej()
             res(found)
         })
+    }
+
+    public isValidHash = (hash: string) : boolean => {
+        if(hash == undefined || hash == "") return false
+        let [found] = databaseMock.filter((e) => {
+            return (e.hash == hash)
+        })
+        if (found == undefined || found.expires == undefined || found.expires < new Date()) return false;
+        return true
+       
     }
 
 
@@ -73,6 +84,7 @@ export class DB {
         expires.setHours(expires.getHours() + this.config.get("hash-lifetime"))
         user.expires = expires
         databaseMock[index] = user;
+        console.log("generiere Hashtoken für",user.username,user.userid)
         return user;
 
     }
