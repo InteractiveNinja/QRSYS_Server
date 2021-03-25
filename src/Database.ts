@@ -1,4 +1,4 @@
-import { ConfigManager } from '@interactiveninja/config-reader';
+import { config, ConfigManager } from '@interactiveninja/config-reader';
 import * as c from 'crypto'
 
 interface db_schema {
@@ -24,7 +24,7 @@ let databaseMock: db_schema[] = [{
 
 
 export class DB {
-    constructor(private config?: ConfigManager) {
+    constructor(private config: ConfigManager) {
 
     }
 
@@ -53,7 +53,7 @@ export class DB {
             }
         })
     }
-    private checkHash = (form: loginForm): Promise<db_schema> => {
+    public checkHash = (form: loginForm): Promise<db_schema> => {
         return new Promise((res, rej) => {
             let [found] = databaseMock.filter((e) => {
                 return (e.hash == form.hash)
@@ -68,9 +68,9 @@ export class DB {
 
         let index = databaseMock.indexOf(user);
 
-        user.hash = c.createHash("md5").update((user.userid + new Date().getTime().toString())).digest("hex")
-        let expires = new Date()
-        expires.setHours(expires.getHours() + 2)
+        user.hash = c.createHash(this.config.get("hashtyp")).update((user.userid + new Date().getTime().toString())).digest("hex")
+            let expires = new Date()
+        expires.setHours(expires.getHours() + this.config.get("hash-lifetime"))
         user.expires = expires
         databaseMock[index] = user;
         return user;
