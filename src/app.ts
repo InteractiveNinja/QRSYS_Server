@@ -3,14 +3,15 @@ import { AuthServer } from './authServer';
 import { config as c } from '@interactiveninja/config-reader'
 import {SocketServer} from './socketServer'
 import {config as env} from 'dotenv'
+import DB from './Database';
 const config = c("config.json")
 
 //Ladet Umgebungsvariablen
 env()
 
-console.log(process.env.DB)
 
 // Ladet die verschieden Module
-let authManager = new AuthManagment(config)
+let database = new DB()
+let authManager = new AuthManagment(config,database)
 let socket = new SocketServer(config,authManager)
 let auth = new AuthServer(config,authManager)

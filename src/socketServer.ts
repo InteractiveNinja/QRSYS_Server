@@ -14,22 +14,23 @@ export class SocketServer {
 
     private run() {
         this.server.on('connection', (socket) => {
-            socket.on('message', socketData => {
+            socket.on('message', async socketData => {
                 try {
                     let json = JSON.parse(socketData.toString())
                     let hash = json.hash
                     switch (json.type) {
                         case "register":
-                            registerSocket(json.value, socket, json.hostname).then(() => socket.send(this.sendStatus("callback", "200"))).catch(() => socket.send(this.sendStatus("callback", "500")))
+                            registerSocket(json.value, socket, json.hostname).then(() => socket.send(this.sendStatus("callback", 200))).catch(() => socket.send(this.sendStatus("callback", 500)))
                             break;
                         case "send":
+                            if(!(await this.authManager.isValidHash(hash))) throw new Error("Hash ist nicht gültig")
 
-                            if(!this.authManager.isValidHash(hash)) throw new Error("Hash ist nicht gültig")
-                            sendToSocket(json.userid, json.deviceid, json.message).then(() => socket.send(this.sendStatus("callback", "200"))).catch(() => socket.send(this.sendStatus("callback", "500")))
+                            sendToSocket(json.userid, json.deviceid, json.message).then(() => socket.send(this.sendStatus("callback", 200))).catch(() => socket.send(this.sendStatus("callback", 500)))
                             break;
                         case "list":
-                            if(!this.authManager.isValidHash(hash)) throw new Error("Hash ist nicht gültig")
-                            listSockets(json.value).then(e => socket.send(JSON.stringify(e))).catch(() => socket.send(this.sendStatus("callback", "500")))
+                            if(!(await this.authManager.isValidHash(hash))) throw new Error("Hash ist nicht gültig")
+                            
+                            listSockets(json.value).then(e => socket.send(JSON.stringify(e))).catch((e) => socket.send(this.sendStatus("callback", e)))
                             break;
                         default:
                             throw new Error("Es wurde keine Operation gewählt")
@@ -37,7 +38,7 @@ export class SocketServer {
 
 
                 } catch (error) {
-                    socket.send(this.sendStatus("callback", "500"))
+                    socket.send(this.sendStatus("callback", 500))
                     socket.close()
                 }
 
@@ -51,7 +52,7 @@ export class SocketServer {
         })
     }
 
-    private sendStatus = (type: string, value: string): string => {
+    private sendStatus = (type: string, value: string | number): string => {
         return JSON.stringify({ type, value })
     }
 

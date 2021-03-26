@@ -43,7 +43,7 @@ export let listSockets = (userid: number): Promise<connectionList[]> => {
 
             res(devices)
         } else {
-            rej(undefined)
+            rej(404)
         }
     })
 }
