@@ -1,10 +1,10 @@
-import { DB } from './Database';
+import { AuthManagment } from './authManagment';
 import { ConfigManager } from '@interactiveninja/config-reader';
 import express, { json as js } from 'express';
 export class AuthServer {
     private port: number
     private express;
-    constructor(config: ConfigManager,private db: DB) {
+    constructor(config: ConfigManager,private authManager: AuthManagment) {
         this.port = config.get("authport")
         this.express = express()
         this.run()
@@ -26,7 +26,7 @@ export class AuthServer {
             res.sendStatus(200)
         })
         app.post("/login", (req, res) => {
-            this.db.checkLogin(req.body).then((e) => res.json({userid:e.userid,hash:e.hash})).catch(() => res.sendStatus(403))
+            this.authManager.checkLogin(req.body).then((e) => res.json({userid:e.userid,hash:e.hash})).catch(() => res.sendStatus(403))
         })
 
 

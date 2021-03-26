@@ -23,7 +23,7 @@ let databaseMock: db_schema[] = [{
 }]
 
 
-export class DB {
+export class AuthManagment {
     constructor(private config: ConfigManager) {
 
     }

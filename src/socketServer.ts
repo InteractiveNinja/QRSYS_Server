@@ -1,4 +1,4 @@
-import { DB } from './Database';
+import { AuthManagment } from './authManagment';
 import { registerSocket, listSockets, sendToSocket } from './socketManagment';
 import { Server } from 'ws';
 import { ConfigManager } from '@interactiveninja/config-reader'
@@ -6,7 +6,7 @@ export class SocketServer {
 
     private port: number;
     private server: Server;
-    constructor(config: ConfigManager, private db: DB) {
+    constructor(config: ConfigManager, private authManager: AuthManagment) {
         this.port = config.get("socketport")
         this.server = new Server({ port: this.port })
         this.run();
@@ -24,11 +24,11 @@ export class SocketServer {
                             break;
                         case "send":
 
-                            if(!this.db.isValidHash(hash)) throw new Error("Hash ist nicht gültig")
+                            if(!this.authManager.isValidHash(hash)) throw new Error("Hash ist nicht gültig")
                             sendToSocket(json.userid, json.deviceid, json.message).then(() => socket.send(this.sendStatus("callback", "200"))).catch(() => socket.send(this.sendStatus("callback", "500")))
                             break;
                         case "list":
-                            if(!this.db.isValidHash(hash)) throw new Error("Hash ist nicht gültig")
+                            if(!this.authManager.isValidHash(hash)) throw new Error("Hash ist nicht gültig")
                             listSockets(json.value).then(e => socket.send(JSON.stringify(e))).catch(() => socket.send(this.sendStatus("callback", "500")))
                             break;
                         default:

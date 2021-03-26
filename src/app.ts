@@ -1,4 +1,4 @@
-import { DB } from './Database';
+import { AuthManagment } from './authManagment';
 import { AuthServer } from './authServer';
 import { config as c } from '@interactiveninja/config-reader'
 import {SocketServer} from './socketServer'
@@ -11,6 +11,6 @@ env()
 console.log(process.env.DB)
 
 // Ladet die verschieden Module
-let database = new DB(config)
-let socket = new SocketServer(config,database)
-let auth = new AuthServer(config,database)
+let authManager = new AuthManagment(config)
+let socket = new SocketServer(config,authManager)
+let auth = new AuthServer(config,authManager)
