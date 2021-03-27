@@ -1,6 +1,7 @@
 [{
     "socketport": 8080,
     "authport": 8081,
-    "hash-lifetime":2,
+    "hash-lifetime":4,
+    "hash-lifetime-type": "hours",
     "hashtyp":"md5"
 }]

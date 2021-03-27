@@ -1,7 +1,7 @@
 import { ConfigManager } from '@interactiveninja/config-reader';
 import * as c from 'crypto'
+import moment from 'moment';
 import DB, { db_schema } from './Database';
-import { format } from 'fecha'
 
 interface loginForm { username: string, password: string, hash?: string }
 
@@ -50,12 +50,11 @@ export class AuthManagment {
     private setHash = (user: db_schema): db_schema => {
 
         user.hash = c.createHash(this.config.get("hashtyp")).update((user.userid + new Date().getTime().toString())).digest("hex")
-        let expires = new Date()
-        expires.setHours(expires.getHours() + this.config.get("hash-lifetime"))
+        let expires = moment(new Date()).add(this.config.get("hash-lifetime"),this.config.get("hash-lifetime-type")).toDate()
         user.expires = expires;
-        let expiresString = format(expires, "YYYY-MM-DD hh:mm:ss")
+        let expiresString = moment(expires).format("YYYY-MM-DD HH:MM:ss")
         this.db.createInsert(`update login set hash = '${user.hash}', expires = '${expiresString}' where userid = ${user.userid}`)
-        console.log("generiere Hashtoken für", user.username, user.userid)
+        console.log(`Hashtoken für ${user.userid} erstellt. Läuft um: ${expires} ab`)
         return user
 
     }
