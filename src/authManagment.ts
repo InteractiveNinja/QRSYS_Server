@@ -11,6 +11,11 @@ export class AuthManagment {
 
     }
 
+    /**
+     * Checkt ob das Login valide ist und gibt wenn erfolgreich ein DB Schema zurück
+     * @param form json {username,password}
+     * @returns db_schema {userid,hash}
+     */
     public checkLogin = (form: loginForm): Promise<db_schema> => {
         return new Promise((res, rej) => {
             this.checkHash(form).then((e) => {
@@ -59,6 +64,11 @@ export class AuthManagment {
 
     }
 
+    /**
+     * Prüft ob der Hash einem nutzer gehört
+     * @param hash userhash as json
+     * @returns true if hash is valide
+     */
     public isValidHash = async (hash: string): Promise<boolean> => {
         if (hash == undefined || hash == "") return false
         let [found] = await this.db.createQuery(`select * from login where hash = '${hash}' limit 1`)

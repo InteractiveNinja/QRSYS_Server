@@ -30,6 +30,11 @@ export default class DB {
 
     //Hier sollte beobachtet werden wie der expires Date konvertiert wird
 
+    /**
+     * Sucht in der Datenbank nach dem query
+     * @param sql suchender Inhalt
+     * @returns Querry Results als <db_schema>
+     */
     public createQuery = (sql: string): Promise<db_schema[]> => {
         return new Promise((res, rej) => {
             let con = this.getConnection()
