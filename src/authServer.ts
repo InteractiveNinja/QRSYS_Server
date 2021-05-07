@@ -1,6 +1,7 @@
 import { AuthManagment } from './authManagment';
 import { ConfigManager } from '@interactiveninja/config-reader';
 import express, { json as js } from 'express';
+import cors from 'cors';
 export class AuthServer {
     private port: number
     private express;
@@ -13,14 +14,8 @@ export class AuthServer {
     private run() {
         const app = this.express;
 
+        app.use(cors())
         app.use(js())
-
-        app.all('*', function (req, res, next) {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type');
-            next();
-        });
 
         app.get("/", (req, res) => {
             res.sendStatus(200)
